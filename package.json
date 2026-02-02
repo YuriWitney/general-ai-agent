@@ -1,5 +1,5 @@
 {
-  "name": "ignite-chapter-two",
+  "name": "general-ai-agent",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -16,15 +16,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YuriWitney/Ignite-chapter-two.git"
+    "url": "git+https://github.com/YuriWitney/general-ai-agent.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/YuriWitney/Ignite-chapter-two/issues"
+    "url": "https://github.com/YuriWitney/general-ai-agent/issues"
   },
-  "homepage": "https://github.com/YuriWitney/Ignite-chapter-two#readme",
+  "homepage": "https://github.com/YuriWitney/general-ai-agent#readme",
   "devDependencies": {
     "@types/jest": "^29.1.2",
     "@typescript-eslint/eslint-plugin": "^5.39.0",
