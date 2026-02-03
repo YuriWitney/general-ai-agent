@@ -1,18 +1,18 @@
 import { tool } from '@langchain/core/tools'
 import { MemorySaver } from '@langchain/langgraph'
-import { ChatOpenAI } from '@langchain/openai'
 import { createReactAgent } from '@langchain/langgraph/prebuilt'
 import z from 'zod'
-import { BaseMessage, HumanMessage } from '@langchain/core/messages'
+import { HumanMessage } from '@langchain/core/messages'
+import { ChatGroq } from '@langchain/groq'
 
-const model = new ChatOpenAI({
-  modelName: 'gpt-4o',
+const model = new ChatGroq({
+  model: 'openai/gpt-oss-safeguard-20b',
   temperature: 0
 })
 const weatherTool = tool(
   async ({ location }) => {
     console.log(`[System] Searching weather for ${location}...`)
-    return `The weather in ${location} is sunny with a high of 25°F.`
+    return `The weather in ${location} is sunny with a high of 25°C.`
   },
   {
     name: 'get_weather',
@@ -44,7 +44,7 @@ async function main (): Promise<void> {
     messages: [new HumanMessage('What is the weather like in Fortaleza?')]
   }, config)
 
-  const lastMessage = response.messages[response.messages.length - 1] as BaseMessage
+  const lastMessage = response.messages[response.messages.length - 1]
   console.log('Agent: ', lastMessage.content)
 }
 
