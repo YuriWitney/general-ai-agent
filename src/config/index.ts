@@ -1,5 +1,3 @@
-import 'dotenv-cli/config'
-
 export const config = {
   apiKey: process.env.API_KEY,
   modelName: process.env.LLM_MODEL_NAME ?? '',

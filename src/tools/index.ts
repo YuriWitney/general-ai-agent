@@ -3,7 +3,7 @@ import z from 'zod'
 
 const weatherTool = tool(
   async ({ location }) => {
-    console.log(`[System] Searching weather for ${location}...`)
+    console.log(`[Sistema] Buscando por informações de tempo em ${location}...`)
     if (location.toLowerCase().includes('são paulo')) {
       return `The weather in ${location} is sunny with a high of 25°C.`
     }

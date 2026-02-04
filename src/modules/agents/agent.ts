@@ -2,10 +2,11 @@ import { BaseMessage } from '@langchain/core/messages'
 import { ChatGroq } from '@langchain/groq'
 import { MemorySaver } from '@langchain/langgraph'
 import { createReactAgent } from '@langchain/langgraph/prebuilt'
-import { config } from '../config/index.js'
-import { tools } from '../tools/index.js'
+import { config } from '../../config/index.js'
+import { tools } from '../../tools/index.js'
+import { StreamEvent } from '@langchain/core/types/stream'
 
-export class AIAgent {
+export class Agent {
   private readonly agentExecutor
   private readonly threadId: string
 
@@ -39,11 +40,11 @@ export class AIAgent {
     return messages[messages.length - 1]
   }
 
-  async stream (input: { messages: BaseMessage[] }): Promise<AsyncIterable<BaseMessage>> {
-    const stream = await this.agentExecutor.stream(
+  async streamEvents (input: { messages: BaseMessage[] }): Promise<AsyncIterable<StreamEvent>> {
+    const stream = await this.agentExecutor.streamEvents(
       input,
-      { configurable: { thread_id: this.threadId } }
+      { version: 'v1', configurable: { thread_id: this.threadId } }
     )
-    return stream as AsyncIterable<BaseMessage>
+    return stream as AsyncIterable<StreamEvent>
   }
 }

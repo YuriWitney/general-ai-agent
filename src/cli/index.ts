@@ -1,5 +1,5 @@
 import { HumanMessage } from 'langchain'
-import { AIAgent } from '../modules/agents.js'
+import { Agent } from '../modules/agents/agent.js'
 import * as readline from 'readline'
 
 const rl = readline.createInterface({
@@ -7,9 +7,9 @@ const rl = readline.createInterface({
   output: process.stdout
 })
 
-const agent = new AIAgent()
+const agent = new Agent()
 
-console.log('Welcome to the AI Agent CLI. Type your messages or "exit" to quit.')
+console.log('Bem vindo ao Agente de IA! Digite sua mensagem ou "sair" para sair.')
 
 async function handleInput (input: string): Promise<void> {
   if (input.toLowerCase() === 'exit') {
@@ -18,28 +18,31 @@ async function handleInput (input: string): Promise<void> {
   }
   try {
     process.stdout.write('Agent: ')
-    const stream = await agent.stream({ messages: [new HumanMessage(input)] })
-    let content
-    for await (const chunk of stream) {
-      content = typeof chunk.content === 'string' ? chunk.content : JSON.stringify(chunk.content)
-      process.stdout.write(content)
+    const stream = await agent.streamEvents({ messages: [new HumanMessage(input)] })
+    for await (const event of stream) {
+      if (event.event === 'on_chain_stream') {
+        const chunk = event.data?.chunk?.agent?.messages[0].content
+        if (typeof chunk === 'string') {
+          process.stdout.write(chunk)
+        }
+      }
     }
     process.stdout.write('\n')
   } catch (error) {
-    console.error('Error: Can not invoke Agent', error)
+    console.error('Erro: Não foi possivel executar o Agente', error)
   }
   askQuestion()
 }
 
 function askQuestion (): void {
-  rl.question('You: ', (input) => {
+  rl.question('Você: ', (input) => {
     void handleInput(input)
   })
 }
 
 askQuestion()
 
-rl.on('close', () => {
-  console.log('Goodbye!')
+rl.on('sair', () => {
+  console.log('Até mais!')
   process.exit(0)
 })
