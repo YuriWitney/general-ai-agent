@@ -1,11 +1,10 @@
 import { BaseMessage } from '@langchain/core/messages'
-import { MemorySaver } from '@langchain/langgraph'
-import { createReactAgent } from '@langchain/langgraph/prebuilt'
 import { StreamEvent } from '@langchain/core/types/stream'
 import { tools } from '../../tools/index.js'
 import { config } from '../../config/index.js'
 import { IAgentService } from './interfaces.js'
 import { GroqAdapter } from '../../adapters/services/groq.js'
+import { LanggraphAdapter } from '../../adapters/langchain/langgraph.js'
 
 export class AgentService implements IAgentService {
   private readonly agentExecutor
@@ -19,9 +18,9 @@ export class AgentService implements IAgentService {
       apiKey: config.apiKey
     })
 
-    const memory = new MemorySaver()
+    const memory = new LanggraphAdapter().memorySaver()
 
-    this.agentExecutor = createReactAgent({
+    this.agentExecutor = new LanggraphAdapter().createReactAgent({
       llm: model,
       tools,
       checkpointSaver: memory
