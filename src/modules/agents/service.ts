@@ -48,6 +48,6 @@ export class AgentService implements IAgentService {
       input,
       { version: 'v1', configurable: { thread_id: this.threadId } }
     )
-    return stream as AsyncIterable<StreamEvent>
+    return stream
   }
 }

@@ -11,10 +11,19 @@ export interface IAgentFactory {
     tools: ToolNode<any> | Array<ServerTool | ClientTool>
     checkpointSaver: MemorySaver
   }) => {
-    invoke: (input: { messages: BaseMessage[] }, config: { [key: string]: string }) => Promise<{ messages: BaseMessage[] }>
+    invoke: (
+      input: { messages: BaseMessage[] },
+      config: {
+        configurable: {
+          [key: string]: string
+        }
+      }
+    ) => Promise<{ messages: BaseMessage[] }>
     streamEvents: (input: { messages: BaseMessage[] }, config: {
       version: 'v1' | 'v2'
-      [key: string]: string
+      configurable: {
+        [key: string]: string
+      }
     }) => AsyncIterable<StreamEvent>
   }
 }
