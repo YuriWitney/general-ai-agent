@@ -5,13 +5,16 @@ import { config } from '../../config/index.js'
 import { IAgentService } from './interfaces.js'
 import { GroqAdapter } from '../../adapters/services/groq.js'
 import { LanggraphAdapter } from '../../adapters/langchain/langgraph.js'
+import { IAgentFactory } from '../../interfaces/IAgentFactory.js'
 
 export class AgentService implements IAgentService {
   private readonly agentExecutor
-  private readonly threadId: string
 
-  constructor (threadId: string = config.threadId) {
-    this.threadId = threadId
+  constructor (
+    private readonly threadId: string,
+    private readonly agentFactory: IAgentFactory
+  ) {
+    this.threadId = config.threadId
     const model = new GroqAdapter().adapt({
       model: config.modelName,
       temperature: config.temperature,
@@ -20,7 +23,7 @@ export class AgentService implements IAgentService {
 
     const memory = new LanggraphAdapter().memorySaver()
 
-    this.agentExecutor = new LanggraphAdapter().createReactAgent({
+    this.agentExecutor = this.agentFactory.createReactAgent({
       llm: model,
       tools,
       checkpointSaver: memory
