@@ -1,5 +1,5 @@
 import { HumanMessage } from 'langchain'
-import { Agent } from '../modules/agents/agent.js'
+import { Agent } from '../modules/agents/controller.js'
 import * as readline from 'readline'
 
 const rl = readline.createInterface({

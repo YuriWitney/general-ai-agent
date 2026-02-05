@@ -1,32 +1,51 @@
-import { HumanMessage } from '@langchain/core/messages'
-import { Agent } from './agent.js'
+import { BaseMessage } from '@langchain/core/messages'
+import { MemorySaver } from '@langchain/langgraph'
+import { createReactAgent } from '@langchain/langgraph/prebuilt'
+import { StreamEvent } from '@langchain/core/types/stream'
+import { tools } from '../../tools/index.js'
+import { config } from '../../config/index.js'
+import { IAgentService } from './interfaces.js'
+import { GroqAdapter } from '../../adapters/services/groq.js'
 
-export class AgentService {
-  constructor (
-    private readonly agent: Agent,
-    private readonly llm: any
-  ) {}
+export class AgentService implements IAgentService {
+  private readonly agentExecutor
+  private readonly threadId: string
 
-  public async executeStreamEvents (input: string): Promise<void> {
-    if (input.toLowerCase() === 'exit') {
-      rl.close()
-      return
-    }
-    try {
-      process.stdout.write('Agent: ')
-      const stream = await this.agent.streamEvents({ messages: [new HumanMessage(input)] })
-      for await (const event of stream) {
-        if (event.event === 'on_chain_stream') {
-          const chunk = event.data?.chunk?.agent?.messages[0].content
-          if (typeof chunk === 'string') {
-            process.stdout.write(chunk)
-          }
+  constructor (threadId: string = config.threadId) {
+    this.threadId = threadId
+    const model = new GroqAdapter().adapt({
+      model: config.modelName,
+      temperature: config.temperature,
+      apiKey: config.apiKey
+    })
+
+    const memory = new MemorySaver()
+
+    this.agentExecutor = createReactAgent({
+      llm: model,
+      tools,
+      checkpointSaver: memory
+    })
+  }
+
+  async invoke (input: { messages: BaseMessage[] }): Promise<BaseMessage> {
+    const result = await this.agentExecutor.invoke(
+      input,
+      {
+        configurable: {
+          thread_id: this.threadId
         }
       }
-      process.stdout.write('\n')
-    } catch (error) {
-      console.error('Erro: Não foi possivel executar o Agente', error)
-    }
-    askQuestion()
+    )
+    const messages = result.messages
+    return messages[messages.length - 1]
+  }
+
+  async streamEvents (input: { messages: BaseMessage[] }): Promise<AsyncIterable<StreamEvent>> {
+    const stream = await this.agentExecutor.streamEvents(
+      input,
+      { version: 'v1', configurable: { thread_id: this.threadId } }
+    )
+    return stream as AsyncIterable<StreamEvent>
   }
 }
