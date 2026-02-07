@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "src/cli/index.ts",
+  "main": "src/main.ts",
   "scripts": {
     "test": "jest",
-    "start": "node dist/src/cli/index.js",
-    "dev": "dotenv -e .env tsx src/cli/index.ts",
+    "start": "node dist/src/main.js",
+    "start:dev": "dotenv -e .env tsx src/main.ts",
     "lint-staged": "lint-staged",
     "prepare": "husky install"
   },

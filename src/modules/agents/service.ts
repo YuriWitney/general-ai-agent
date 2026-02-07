@@ -1,24 +1,23 @@
 import { BaseMessage } from '@langchain/core/messages'
 import { StreamEvent } from '@langchain/core/types/stream'
-import { tools } from '../../tools/index.js'
-import { config } from '../../config/index.js'
 import { IAgentService } from './interfaces.js'
 import { GroqAdapter } from '../../adapters/services/groq.js'
 import { LanggraphAdapter } from '../../adapters/langchain/langgraph.js'
 import { IAgentFactory } from '../../interfaces/IAgentFactory.js'
+import { IConfig } from '../../interfaces/IConfig.js'
+import { tools } from '../../adapters/tools/langChainTools.js'
 
 export class AgentService implements IAgentService {
   private readonly agentExecutor
 
   constructor (
-    private readonly threadId: string,
-    private readonly agentFactory: IAgentFactory
+    private readonly agentFactory: IAgentFactory,
+    private readonly config: IConfig
   ) {
-    this.threadId = config.threadId
     const model = new GroqAdapter().adapt({
-      model: config.modelName,
-      temperature: config.temperature,
-      apiKey: config.apiKey
+      model: this.config.modelName,
+      temperature: this.config.temperature,
+      apiKey: this.config.apiKey
     })
 
     const memory = new LanggraphAdapter().memorySaver()
@@ -35,7 +34,7 @@ export class AgentService implements IAgentService {
       input,
       {
         configurable: {
-          thread_id: this.threadId
+          thread_id: this.config.threadId
         }
       }
     )
@@ -46,7 +45,7 @@ export class AgentService implements IAgentService {
   async streamEvents (input: { messages: BaseMessage[] }): Promise<AsyncIterable<StreamEvent>> {
     const stream = await this.agentExecutor.streamEvents(
       input,
-      { version: 'v1', configurable: { thread_id: this.threadId } }
+      { version: 'v1', configurable: { thread_id: this.config.threadId } }
     )
     return stream
   }
