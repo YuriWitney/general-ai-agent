@@ -16,7 +16,7 @@ export class CliClient {
     }
 
     try {
-      process.stdout.write('Agent: ')
+      process.stdout.write('Agente: ')
       const stream = await this.agentService.streamEvents({ messages: [new HumanMessage(input)] })
       for await (const event of stream) {
         if (event.event === 'on_chain_stream') {
