@@ -9,6 +9,9 @@
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": true
-  }
+    "strict": true,
+    "types": ["jest", "node"],
+    "isolatedModules": true,
+  },
+  "exclude": ["src/**/*.spec.ts"]
 }
