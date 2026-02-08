@@ -13,6 +13,7 @@ export default defineConfig({
       exclude: [
         'src/interfaces/**/*.ts',
         '**/interfaces.ts',
+        '**/test-helper.ts',
         '**/*.spec.ts'
       ]
     }

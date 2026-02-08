@@ -1,21 +1,7 @@
-import { BaseMessage } from '@langchain/core/messages'
 import { AgentController } from '../controller'
-import { IAgentController, IAgentService } from '../interfaces'
-import { describe, it, expect, vi, Mocked } from 'vitest'
-
-const makeAgentServiceStub = (): Mocked<IAgentService> => ({
-  invoke: vi.fn().mockResolvedValue(makeBaseMessageStub('agent invoke test').messages[0]),
-  streamEvents: vi.fn()
-})
-
-const makeBaseMessageStub = (content: string): { messages: BaseMessage[] } => {
-  return {
-    messages: [
-      {
-        content
-      }] as unknown as BaseMessage[]
-  }
-}
+import { IAgentController } from '../interfaces'
+import { describe, it, expect } from 'vitest'
+import { makeAgentServiceStub, makeBaseMessageStub } from './helpers/test-helper'
 
 const makeSut = (): IAgentController => {
   const agentServiceStub = makeAgentServiceStub()
