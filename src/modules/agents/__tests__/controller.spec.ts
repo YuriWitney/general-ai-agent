@@ -1,10 +1,11 @@
 import { BaseMessage } from '@langchain/core/messages'
 import { AgentController } from '../controller'
 import { IAgentController, IAgentService } from '../interfaces'
+import { describe, it, expect, vi, Mocked } from 'vitest'
 
-const makeAgentServiceStub = (): jest.Mocked<IAgentService> => ({
-  invoke: jest.fn().mockResolvedValue(makeBaseMessageStub('agent invoke test').messages[0]),
-  streamEvents: jest.fn()
+const makeAgentServiceStub = (): Mocked<IAgentService> => ({
+  invoke: vi.fn().mockResolvedValue(makeBaseMessageStub('agent invoke test').messages[0]),
+  streamEvents: vi.fn()
 })
 
 const makeBaseMessageStub = (content: string): { messages: BaseMessage[] } => {
@@ -22,8 +23,8 @@ const makeSut = (): IAgentController => {
   return sut
 }
 
-describe(`${AgentController.name as string} tests`, () => {
-  describe(`When ${AgentController.prototype.execute.name as string} is called`, () => {
+describe(`${AgentController.name} tests`, () => {
+  describe(`When ${AgentController.prototype.execute.name} is called`, () => {
     it('Should call AgentController.prototype.execute.name with correct params', async () => {
       const sut = makeSut()
       const fakeInput = makeBaseMessageStub('some input')
