@@ -2,13 +2,13 @@ import { Mocked, expect, describe, it } from 'vitest'
 import { AgentService } from '../service'
 import { IAgentFactory } from '../../../interfaces/IAgentFactory'
 import { IConfig } from '../../../interfaces/IConfig'
-import { makeBaseMessageStub } from './helpers/test-helper'
+import { makeBaseMessageStub, makeFakeStreamEvent } from './helpers/test-helper'
 import { IAgentService } from '../interfaces'
 
 const makeAgentFactoryStub = (): Mocked<IAgentFactory> => ({
   createReactAgent: vi.fn().mockReturnValue({
     invoke: vi.fn().mockResolvedValue(makeBaseMessageStub('agent invoke test')),
-    streamEvents: vi.fn().mockResolvedValue(makeBaseMessageStub('agent stream events test'))
+    streamEvents: vi.fn().mockResolvedValue(makeFakeStreamEvent('agent stream events test'))
   })
 })
 
@@ -34,6 +34,32 @@ describe(`${AgentService.name} tests`, () => {
       const result = await sut.invoke(fakeInput)
 
       expect(result).toEqual(makeBaseMessageStub('agent invoke test').messages[0])
+    })
+  })
+
+  describe(`When ${AgentService.prototype.streamEvents.name} method is called`, () => {
+    it(`Should call ${AgentService.prototype.streamEvents.name} with correct params`, async () => {
+      const sut = makeSut()
+      const fakeInput = makeBaseMessageStub('some_input')
+
+      const result = await sut.streamEvents(fakeInput)
+
+      expect(result).toEqual({
+        name: 'test',
+        run_id: 'test-run-id',
+        metadata: {},
+        event: 'on_chain_stream',
+        data: {
+          chunk: {
+            messages: [
+              {
+                content: 'agent stream events test',
+                role: 'agent'
+              }
+            ]
+          }
+        }
+      })
     })
   })
 })
