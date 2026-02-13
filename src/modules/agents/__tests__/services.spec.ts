@@ -44,22 +44,24 @@ describe(`${AgentService.name} tests`, () => {
 
       const result = await sut.streamEvents(fakeInput)
 
-      expect(result).toEqual({
+      expect(result).toEqual([{
         name: 'test',
         run_id: 'test-run-id',
         metadata: {},
         event: 'on_chain_stream',
         data: {
           chunk: {
-            messages: [
-              {
-                content: 'agent stream events test',
-                role: 'agent'
-              }
-            ]
+            agent: {
+              messages: [
+                {
+                  content: 'agent stream events test',
+                  role: 'agent'
+                }
+              ]
+            }
           }
         }
-      })
+      }])
     })
   })
 })

@@ -17,21 +17,23 @@ export const makeBaseMessageStub = (content: string): { messages: BaseMessage[] 
   }
 }
 
-export const makeFakeStreamEvent = (content: string): StreamEvent => {
-  return {
+export const makeFakeStreamEvent = (content: string): StreamEvent[] => {
+  return [{
     name: 'test',
     run_id: 'test-run-id',
     metadata: {},
     event: 'on_chain_stream',
     data: {
       chunk: {
-        messages: [
-          {
-            content,
-            role: 'agent'
-          }
-        ]
+        agent: {
+          messages: [
+            {
+              content,
+              role: 'agent'
+            }
+          ]
+        }
       }
     }
-  }
+  }]
 }

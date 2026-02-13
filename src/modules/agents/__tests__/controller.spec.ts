@@ -28,22 +28,24 @@ describe(`${AgentController.name} tests`, () => {
 
       const result = await sut.executeStream(fakeInput)
 
-      expect(result).toEqual({
+      expect(result).toEqual([{
         name: 'test',
         run_id: 'test-run-id',
         metadata: {},
         event: 'on_chain_stream',
         data: {
           chunk: {
-            messages: [
-              {
-                content: 'agent invoke test',
-                role: 'agent'
-              }
-            ]
+            agent: {
+              messages: [
+                {
+                  content: 'agent invoke test',
+                  role: 'agent'
+                }
+              ]
+            }
           }
         }
-      })
+      }])
     })
   })
 })
