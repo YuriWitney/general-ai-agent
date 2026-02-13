@@ -1,5 +1,5 @@
 import { LanggraphAdapter } from './adapters/langchain/langgraph.js'
-import { CliClient } from './infra/cli/cli.js'
+import { CliClient } from './infra/cli/cliClient.js'
 import { config } from './infra/config/config.js'
 import { AgentService } from './modules/agents/service.js'
 
