@@ -48,6 +48,23 @@ describe(`${AgentService.name} tests`, () => {
         name: 'test',
         run_id: 'test-run-id',
         metadata: {},
+        event: 'on_chain_start',
+        data: {
+          chunk: {
+            agent: {
+              messages: [
+                {
+                  content: 'agent stream events test',
+                  role: 'agent'
+                }
+              ]
+            }
+          }
+        }
+      }, {
+        name: 'test',
+        run_id: 'test-run-id',
+        metadata: {},
         event: 'on_chain_stream',
         data: {
           chunk: {

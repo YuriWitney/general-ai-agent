@@ -22,6 +22,23 @@ export const makeFakeStreamEvent = (content: string): StreamEvent[] => {
     name: 'test',
     run_id: 'test-run-id',
     metadata: {},
+    event: 'on_chain_start',
+    data: {
+      chunk: {
+        agent: {
+          messages: [
+            {
+              content,
+              role: 'agent'
+            }
+          ]
+        }
+      }
+    }
+  }, {
+    name: 'test',
+    run_id: 'test-run-id',
+    metadata: {},
     event: 'on_chain_stream',
     data: {
       chunk: {
