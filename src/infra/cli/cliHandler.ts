@@ -1,9 +1,9 @@
 import { rl } from './readlineClient'
-import { ICliClient } from '../../interfaces/ICli'
+import { ICliHandler } from '../../interfaces/ICli'
 import { IAgentService } from '../../modules/agents/interfaces'
 import { HumanMessage } from '@langchain/core/messages'
 
-export class CliClient implements ICliClient {
+export class CliHandler implements ICliHandler {
   constructor (
     private readonly agentService: IAgentService
   ) {
@@ -20,7 +20,7 @@ export class CliClient implements ICliClient {
     })
   }
 
-  public async handle (input: string): Promise<void> {
+  private async handle (input: string): Promise<void> {
     try {
       process.stdout.write('Agente: ')
       const stream = await this.agentService.streamEvents({ messages: [new HumanMessage(input)] })

@@ -62,6 +62,21 @@ describe(`${AgentController.name} tests`, () => {
             }
           }
         }
+      }, {
+        name: 'test',
+        run_id: 'test-run-id',
+        metadata: {},
+        event: 'on_chain_stream',
+        data: {
+          chunk: {
+            agent: {
+              messages: [
+                {
+                }
+              ]
+            }
+          }
+        }
       }])
     })
   })

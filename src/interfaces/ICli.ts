@@ -1,4 +1,3 @@
-export interface ICliClient {
+export interface ICliHandler {
   askQuestion: () => void
-  handle: (input: string) => Promise<void>
 }
